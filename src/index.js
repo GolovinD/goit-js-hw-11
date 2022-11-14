@@ -77,7 +77,7 @@ function onListenScroll() {
 
 function onLoadMore(evt) { 
     pageNumber += 1;
-    numberOfPhotos = pageNumber * PHOTOS_ON_SCREEN;
+    const numberOfPhotos = pageNumber * PHOTOS_ON_SCREEN;
     console.log(pageNumber);
     console.log(numberOfPhotos);
     if (numberOfPhotos > totalFoundPhotos) {
