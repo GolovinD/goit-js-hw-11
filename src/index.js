@@ -6,6 +6,7 @@ import 'simplelightbox/dist/simple-lightbox.min.css';
 let lightbox = new SimpleLightbox('.gallery a');
 import axios from 'axios';
 
+
 const API = 'https://pixabay.com/api/';
 const API_KEY = '31277829-041385667a49103701e539b4a';
 const PHOTOS_ON_SCREEN = 40;
@@ -13,20 +14,18 @@ const PHOTOS_ON_SCREEN = 40;
 let requestData = ``;
 let totalFoundPhotos = null;
 
-const axios = require('axios');
+// const axios = require('axios');
 
-const fetchPhotos = (name, pageNumber) => {
-    
+async function fetchPhotos (name, pageNumber) {
+    console.log('виклик фетч');
     const URL = `${API}?key=${API_KEY}&q=${name}&page=${pageNumber}&per_page=${PHOTOS_ON_SCREEN}&image_type=photo&orientation=horizontal&safesearch=true`;
-    return axios.get(URL)
-        .then(response => {
-            return response;
-        });
+    return await axios.get(URL)
+        
 } 
 
 const formRef = document.querySelector('#search-form');
 const photoGalleryRef = document.querySelector('.gallery');
-const btnLoadMoreRef = document.querySelector('.load-more');
+// const btnLoadMoreRef = document.querySelector('.load-more');
 
 formRef.addEventListener('submit', onSubmit);
 window.addEventListener('scroll', onListenScroll);
