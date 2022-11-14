@@ -14,7 +14,6 @@ let pageNumber = 1;
 
 const formRef = document.querySelector('#search-form');
 const photoGalleryRef = document.querySelector('.gallery');
-// const btnLoadMoreRef = document.querySelector('.load-more');
 
 formRef.addEventListener('submit', onSubmit);
 
