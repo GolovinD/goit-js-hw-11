@@ -18,14 +18,8 @@ const photoGalleryRef = document.querySelector('.gallery');
 formRef.addEventListener('submit', onSubmit);
 
 async function onSubmit(evt) {
-    
     evt.preventDefault();
-    window.removeEventListener('scroll', onInfiniteScroll);
-    photoGalleryRef.innerHTML = '';
-    pageNumber = 1;
-    totalFoundPhotos = null;
-    
-    window.addEventListener('scroll', onInfiniteScroll);
+    clearRequest();     
     requestData = evt.currentTarget.elements.searchQuery.value.trim();
 
     if (!formRef.searchQuery.value) {
@@ -44,10 +38,9 @@ async function onSubmit(evt) {
         Notiflix.Notify.info(`Hooray! We found ${totalFoundPhotos} images.`);
         createMarkupPhotos(photos);
         lightbox.refresh();
+        window.addEventListener('scroll', onInfiniteScroll);
     } catch (error) {console.log(error)}       
 }
-
-
 
 function onInfiniteScroll() {
     
@@ -64,7 +57,6 @@ async function onLoadMore(evt) {
 
     if (numberOfPhotos > totalFoundPhotos) {
         Notiflix.Notify.warning(`We're sorry, but you've reached the end of search results.`);
-        // btnLoadMoreRef.removeEventListener('click', onLoadMore);
         window.removeEventListener('scroll', onInfiniteScroll);
         return
     }
@@ -79,6 +71,14 @@ async function onLoadMore(evt) {
     catch (error) {
         console.log(error); 
     };
+}
+
+function clearRequest() {
+    
+    window.removeEventListener('scroll', onInfiniteScroll);
+    photoGalleryRef.innerHTML = '';
+    pageNumber = 1;
+    totalFoundPhotos = null;
 }
 
 function createMarkupPhotos(data) {
@@ -111,5 +111,3 @@ function createMarkupPhotos(data) {
         </div>`).join('');
     photoGalleryRef.insertAdjacentHTML('beforeend', photos);
 }
-
-
