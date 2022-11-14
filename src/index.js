@@ -1,96 +1,85 @@
 import './css/styles.css';
-// import { fetchCountries } from './js/fetchCountries';
-import Notiflix from 'notiflix';
-import SimpleLightbox from 'simplelightbox';
-import 'simplelightbox/dist/simple-lightbox.min.css';
-
 import {PHOTOS_ON_SCREEN, fetchPhotos} from "./js/fetchCountries"
 
+import Notiflix from 'notiflix';
+import throttle from 'lodash.throttle';
 
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 let lightbox = new SimpleLightbox('.gallery a');
-
-
-
-
 
 let requestData = ``;
 let totalFoundPhotos = null;
 let pageNumber = 1;
-
-
 
 const formRef = document.querySelector('#search-form');
 const photoGalleryRef = document.querySelector('.gallery');
 // const btnLoadMoreRef = document.querySelector('.load-more');
 
 formRef.addEventListener('submit', onSubmit);
-window.addEventListener('scroll', onListenScroll);
 
-function onSubmit(evt) {
-
+async function onSubmit(evt) {
+    
     evt.preventDefault();
+    window.removeEventListener('scroll', onInfiniteScroll);
     photoGalleryRef.innerHTML = '';
     pageNumber = 1;
     totalFoundPhotos = null;
-    // btnLoadMoreRef.addEventListener('click', onLoadMore)
     
+    window.addEventListener('scroll', onInfiniteScroll);
     requestData = evt.currentTarget.elements.searchQuery.value.trim();
-    console.log(requestData);
+
     if (!formRef.searchQuery.value) {
         Notiflix.Notify.warning(`Please enter data to search.`);  
         return
     }
-
+    try {
+        const response = await fetchPhotos(requestData, pageNumber)
+        const photos = response.data.hits
+        totalFoundPhotos = response.data.totalHits
     
-    fetchPhotos(requestData, pageNumber)
-    .then(data => {
-        const photos = data.data.hits
-        totalFoundPhotos = data.data.totalHits
         if (photos < 1) {
             Notiflix.Notify.failure(`Sorry, there are no images matching your search query. Please try again.`);
             return
-            }
-        console.log(data.data.hits);  
+        }
         Notiflix.Notify.info(`Hooray! We found ${totalFoundPhotos} images.`);
-        createMarkupPhotos(photos); 
+        createMarkupPhotos(photos);
         lightbox.refresh();
-    })
+    } catch (error) {console.log(error)}       
 }
 
-function onListenScroll() {
-    console.log('скрол працює');
-    const { scrollHeight, scrollTop, clientHeight } = document.documentElement;
-    console.log(`сторінка`, scrollHeight);
-    console.log(scrollTop);
-    console.log(clientHeight);
+
+
+function onInfiniteScroll() {
+    
+    const { scrollHeight, scrollTop, clientHeight, deltaY } = document.documentElement;
     if (scrollTop === scrollHeight - clientHeight) {
-        console.log('скрол приїхав');
         onLoadMore();
-        console.log(clientHeight);
     }
 }
 
-function onLoadMore(evt) { 
+async function onLoadMore(evt) {
+    
     pageNumber += 1;
     const numberOfPhotos = pageNumber * PHOTOS_ON_SCREEN;
-    console.log(pageNumber);
-    console.log(numberOfPhotos);
+
     if (numberOfPhotos > totalFoundPhotos) {
         Notiflix.Notify.warning(`We're sorry, but you've reached the end of search results.`);
         // btnLoadMoreRef.removeEventListener('click', onLoadMore);
-        // window.removeEventListener('scroll', onListenScroll);
+        window.removeEventListener('scroll', onInfiniteScroll);
         return
     }
-
-    fetchPhotos(requestData, pageNumber)
-        .then(data => {         
-            const newPhotos = data.data.hits        
-            createMarkupPhotos(newPhotos);      
-            lightbox.refresh();
-        })
-        .catch(error => {
-     
-    });
+    try {
+    const response = await fetchPhotos(requestData, pageNumber)        
+    const newPhotos = response.data.hits        
+    createMarkupPhotos(newPhotos);      
+    lightbox.refresh();
+    console.log('завантаження сторінки', pageNumber);
+    console.log('завантаженно фото', numberOfPhotos);
+    }
+    catch (error) {
+        console.log(error); 
+    };
 }
 
 function createMarkupPhotos(data) {
