@@ -3,26 +3,21 @@ import './css/styles.css';
 import Notiflix from 'notiflix';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
+
+import {PHOTOS_ON_SCREEN, fetchPhotos} from "./js/fetchCountries"
+
+
 let lightbox = new SimpleLightbox('.gallery a');
-import axios from 'axios';
 
 
-const API = 'https://pixabay.com/api/';
-const API_KEY = '31277829-041385667a49103701e539b4a';
-const PHOTOS_ON_SCREEN = 40;
+
+
 
 let requestData = ``;
 let totalFoundPhotos = null;
 let pageNumber = 1;
 
-// const axios = require('axios');
 
-async function fetchPhotos (name, pageNumber) {
-    console.log('виклик фетч');
-    const URL = `${API}?key=${API_KEY}&q=${name}&page=${pageNumber}&per_page=${PHOTOS_ON_SCREEN}&image_type=photo&orientation=horizontal&safesearch=true`;
-    return await axios.get(URL)
-        
-} 
 
 const formRef = document.querySelector('#search-form');
 const photoGalleryRef = document.querySelector('.gallery');
