@@ -24,6 +24,8 @@ const fetchPhotos = (name, pageNumber) => {
         });
 } 
 
+
+
 const formRef = document.querySelector('#search-form');
 const photoGalleryRef = document.querySelector('.gallery');
 const btnLoadMoreRef = document.querySelector('.load-more');
