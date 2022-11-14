@@ -13,6 +13,7 @@ const PHOTOS_ON_SCREEN = 40;
 
 let requestData = ``;
 let totalFoundPhotos = null;
+let pageNumber = 1;
 
 // const axios = require('axios');
 
