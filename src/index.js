@@ -49,7 +49,7 @@ function onSubmit(evt) {
     
     fetchPhotos(requestData, pageNumber)
     .then(data => {
-        photos = data.data.hits
+        const photos = data.data.hits
         totalFoundPhotos = data.data.totalHits
         if (photos < 1) {
             Notiflix.Notify.failure(`Sorry, there are no images matching your search query. Please try again.`);
