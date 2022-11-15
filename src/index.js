@@ -45,7 +45,7 @@ async function onSubmit(evt) {
 function onInfiniteScroll() {
     
     const { scrollHeight, scrollTop, clientHeight, deltaY } = document.documentElement;
-    if (scrollTop === scrollHeight - clientHeight) {
+    if (1000 > scrollHeight - scrollTop) {
         onLoadMore();
     }
 }
