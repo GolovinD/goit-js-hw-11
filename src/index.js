@@ -14,8 +14,10 @@ let pageNumber = 1;
 
 const formRef = document.querySelector('#search-form');
 const photoGalleryRef = document.querySelector('.gallery');
+const btnLoadMoreRef = document.querySelector('.btn-load-more')
 
 formRef.addEventListener('submit', onSubmit);
+btnLoadMoreRef.addEventListener('click', onLoadMore);
 
 async function onSubmit(evt) {
     evt.preventDefault();
@@ -38,17 +40,21 @@ async function onSubmit(evt) {
         Notiflix.Notify.info(`Hooray! We found ${totalFoundPhotos} images.`);
         createMarkupPhotos(photos);
         lightbox.refresh();
-        window.addEventListener('scroll', onInfiniteScroll);
+        btnLoadMoreRef.classList.remove('visually-hidden');
+        // document.addEventListener('scroll', onInfiniteScroll);
+        // btnLoadMoreRef.addEventListener('click', onLoadMore);
     } catch (error) {console.log(error)}       
 }
 
-function onInfiniteScroll() {
+// function onInfiniteScroll() {
     
-    const { scrollHeight, scrollTop, clientHeight, deltaY } = document.documentElement;
-    if (1000 > scrollHeight - scrollTop) {
-        onLoadMore();
-    }
-}
+//     const { scrollHeight, scrollTop, clientHeight} = document.documentElement;
+//     // console.log('scrollHeight', scrollHeight);
+//     // console.log('scrollTop', scrollTop);
+//     if (2000 > Number(scrollHeight) - Number.parseInt(scrollTop)) {
+//         onLoadMore();
+//     }
+// }
 
 async function onLoadMore(evt) {
     
@@ -57,16 +63,18 @@ async function onLoadMore(evt) {
 
     if (numberOfPhotos > totalFoundPhotos) {
         Notiflix.Notify.warning(`We're sorry, but you've reached the end of search results.`);
-        window.removeEventListener('scroll', onInfiniteScroll);
+        // document.removeEventListener('scroll', onInfiniteScroll)
+        btnLoadMoreRef.classList.remove('visually-hidden');
         return
     }
     try {
-    const response = await fetchPhotos(requestData, pageNumber)        
-    const newPhotos = response.data.hits        
-    createMarkupPhotos(newPhotos);      
-    lightbox.refresh();
-    console.log('завантаження сторінки', pageNumber);
-    console.log('завантаженно фото', numberOfPhotos);
+        const response = await fetchPhotos(requestData, pageNumber);        
+        const newPhotos = response.data.hits        
+        createMarkupPhotos(newPhotos);      
+        lightbox.refresh();
+        console.log('завантаження сторінки', pageNumber);
+        console.log('завантаженно фото', numberOfPhotos);
+        console.log('totalFoundPhotos', totalFoundPhotos);
     }
     catch (error) {
         console.log(error); 
@@ -75,7 +83,8 @@ async function onLoadMore(evt) {
 
 function clearRequest() {
     
-    window.removeEventListener('scroll', onInfiniteScroll);
+    // document.removeEventListener('scroll',onInfiniteScroll);
+    btnLoadMoreRef.classList.add('visually-hidden'),
     photoGalleryRef.innerHTML = '';
     pageNumber = 1;
     totalFoundPhotos = null;
