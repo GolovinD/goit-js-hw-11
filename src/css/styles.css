@@ -72,8 +72,8 @@ body {
 }
 
 .btn-load-more {
-  margin-left: auto;
-  color: blue;
+  margin-left: 50%;
+  margin-bottom: 30px;
 }
 
 .visually-hidden {

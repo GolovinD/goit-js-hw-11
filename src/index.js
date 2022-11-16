@@ -42,7 +42,6 @@ async function onSubmit(evt) {
         lightbox.refresh();
         btnLoadMoreRef.classList.remove('visually-hidden');
         // document.addEventListener('scroll', onInfiniteScroll);
-        // btnLoadMoreRef.addEventListener('click', onLoadMore);
     } catch (error) {console.log(error)}       
 }
 
@@ -64,7 +63,7 @@ async function onLoadMore(evt) {
     if (numberOfPhotos > totalFoundPhotos) {
         Notiflix.Notify.warning(`We're sorry, but you've reached the end of search results.`);
         // document.removeEventListener('scroll', onInfiniteScroll)
-        btnLoadMoreRef.classList.remove('visually-hidden');
+        btnLoadMoreRef.classList.add('visually-hidden');
         return
     }
     try {
@@ -72,9 +71,9 @@ async function onLoadMore(evt) {
         const newPhotos = response.data.hits        
         createMarkupPhotos(newPhotos);      
         lightbox.refresh();
-        console.log('завантаження сторінки', pageNumber);
-        console.log('завантаженно фото', numberOfPhotos);
-        console.log('totalFoundPhotos', totalFoundPhotos);
+        // console.log('завантаження сторінки', pageNumber);
+        // console.log('завантаженно фото', numberOfPhotos);
+        // console.log('totalFoundPhotos', totalFoundPhotos);
     }
     catch (error) {
         console.log(error); 
