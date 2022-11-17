@@ -53,12 +53,6 @@ function addIntersectionObserver() {
     }
 }
 
-const lastFoto = document.querySelector('.photo-card:last-child');
-        if (lastFoto) {
-            onInfiniteObserver.observe(lastFoto);
-        }
-
-
 const onInfiniteObserver = new IntersectionObserver(([entry], observer) => {
     if (entry.isIntersecting) {
         observer.unobserve(entry.target);
