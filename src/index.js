@@ -42,8 +42,29 @@ async function onSubmit(evt) {
         lightbox.refresh();
         btnLoadMoreRef.classList.remove('visually-hidden');
         // document.addEventListener('scroll', onInfiniteScroll);
+        addIntersectionObserver();
     } catch (error) {console.log(error)}       
 }
+
+function addIntersectionObserver() {
+    const lastFoto = document.querySelector('.photo-card:last-child');
+    if (lastFoto) {
+        onInfiniteObserver.observe(lastFoto);
+    }
+}
+
+const lastFoto = document.querySelector('.photo-card:last-child');
+        if (lastFoto) {
+            onInfiniteObserver.observe(lastFoto);
+        }
+
+
+const onInfiniteObserver = new IntersectionObserver(([entry], observer) => {
+    if (entry.isIntersecting) {
+        observer.unobserve(entry.target);
+        onLoadMore();
+    }
+})
 
 // function onInfiniteScroll() {
     
@@ -71,9 +92,10 @@ async function onLoadMore(evt) {
         const newPhotos = response.data.hits        
         createMarkupPhotos(newPhotos);      
         lightbox.refresh();
-        // console.log('завантаження сторінки', pageNumber);
-        // console.log('завантаженно фото', numberOfPhotos);
-        // console.log('totalFoundPhotos', totalFoundPhotos);
+        addIntersectionObserver();
+        console.log('завантаження сторінки', pageNumber);
+        console.log('завантаженно фото', numberOfPhotos);
+        console.log('totalFoundPhotos', totalFoundPhotos);
     }
     catch (error) {
         console.log(error); 
